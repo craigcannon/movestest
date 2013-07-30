@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Google Maps JavaScript API v3 Example: Polyline Simple</title>
+    <link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+var flightPath = null;
+
+      function initialize() {
+        var myLatLng = new google.maps.LatLng(0, -180);
+        var mapOptions = {
+          zoom: 3,
+          center: myLatLng,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        var flightPlanCoordinates = [
+            new google.maps.LatLng(37.772323, -122.214897),
+            new google.maps.LatLng(21.291982, -157.821856),
+            new google.maps.LatLng(-18.142599, 178.431),
+            new google.maps.LatLng(-27.46758, 153.027892)
+        ];
+        flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          editable: true,
+          draggable: true
+        });
+        google.maps.event.addListener(flightPath, "dragend", getPath);
+        google.maps.event.addListener(flightPath.getPath(), "insert_at", getPath);
+        google.maps.event.addListener(flightPath.getPath(), "remove_at", getPath);
+        google.maps.event.addListener(flightPath.getPath(), "set_at", getPath);
+        flightPath.setMap(map);
+      }
+
+function getPath() {
+   var path = flightPath.getPath();
+   var len = path.getLength();
+   var coordStr = "";
+   for (var i=0; i<len; i++) {
+     coordStr += path.getAt(i).toUrlValue(6)+"<br>";
+   }
+   document.getElementById('path').innerHTML = coordStr;
+}
+
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map-canvas" style="height:500px; width:600px;"></div>
+    <div id="path"></div>
+  </body>
+</html>
